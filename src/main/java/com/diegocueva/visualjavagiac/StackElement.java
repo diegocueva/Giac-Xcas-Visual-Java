@@ -15,9 +15,10 @@ import javagiac.gen;
 
 public class StackElement {
 
+    public gen    result;
     public String input;
     public String visual;
-    public gen result;
+    public String latex;
 
     public StackElement() {
         input = " ";

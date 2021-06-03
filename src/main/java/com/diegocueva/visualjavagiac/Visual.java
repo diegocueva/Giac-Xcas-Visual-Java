@@ -331,10 +331,11 @@ public final class Visual extends JFrame
                  * GIAC evaluation
                  */
                 String input = toProcess;
-                gen g = new gen(input, C);
-                gen h = giac._factor(g, C);
-                h = giac._eval(h, C);
-                stack.put(input, h);
+                gen g = new gen (input, C);
+                gen f = giac._factor(g, C);
+                gen e = giac._eval  (f, C);
+                gen l = giac._latex (e, C);
+                stack.put(input, e, l);
 
                 repaintElements();
             } catch (Throwable ee) {

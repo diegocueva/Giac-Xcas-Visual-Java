@@ -44,15 +44,16 @@ public class Stack {
         }
     }
 
-    public void put(String input, gen result) {
+    public StackElement put(String input, gen result, gen latex) {
         for (int i = 0; i < stackSize - 1; i++) {
             elements[i].set(elements[i + 1]);
         }
 
-        String strResult = resultToString(result, C);
-        elements[stackSize - 1].visual = strResult;
-        elements[stackSize - 1].input = input;
+        elements[stackSize - 1].visual = resultToString(result, C);
+        elements[stackSize - 1].input  = input;
         elements[stackSize - 1].result = result;
+        elements[stackSize - 1].latex  = resultToString(latex, C).replaceAll("\"(.*?)\"", "");
+        return elements[stackSize - 1];
     }
 
     public int getStackSize() {
@@ -79,6 +80,8 @@ public class Stack {
     }
 
     public String resultToString(gen result, context C) {
-        return result.print(C);
+        String resultStr = result.print(C);
+        System.out.println("# tpy="+result.getType()+" sbtpy="+result.getSubtype()+" tpy_u="+result.getType_unused()+" val="+result.getVal()+ " resv="+result.getReserved()+ " | "+resultStr);
+        return resultStr;
     }
 }
