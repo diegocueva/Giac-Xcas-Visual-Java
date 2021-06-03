@@ -114,7 +114,7 @@ public final class Visual extends JFrame
     /**
      * Messages
      */
-    private final JLabel alert = new JLabel("Java GIAC interface");
+    private final JLabel alert = new JLabel("Welcome to Giac/Xcas Visual Java");
 
     /**
      * Stack
@@ -207,7 +207,7 @@ public final class Visual extends JFrame
      * interface
      */
     public Visual() {
-        super("Java GIAC");
+        super("Giac/Xcas Visual Java");
 
         // Init giac context
         C = new context();

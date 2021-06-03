@@ -11,6 +11,7 @@
  */
 package com.diegocueva.visualjavagiac;
 
+import java.awt.Image;
 import javagiac.gen;
 
 public class StackElement {
@@ -19,9 +20,10 @@ public class StackElement {
     public String input;
     public String visual;
     public String latex;
+    public Image  image;
 
     public StackElement() {
-        input = " ";
+        input  = " ";
         visual = " ";
     }
 

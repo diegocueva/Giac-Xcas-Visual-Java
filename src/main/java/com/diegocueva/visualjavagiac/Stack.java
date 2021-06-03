@@ -52,7 +52,10 @@ public class Stack {
         elements[stackSize - 1].visual = resultToString(result, C);
         elements[stackSize - 1].input  = input;
         elements[stackSize - 1].result = result;
-        elements[stackSize - 1].latex  = resultToString(latex, C).replaceAll("\"(.*?)\"", "");
+        String latexStr = resultToString(latex, C).replaceAll("^\"|\"$", "");        
+        elements[stackSize - 1].latex  = latexStr;
+        elements[stackSize - 1].image  = UtilLatex.latexToImage(latexStr);
+
         return elements[stackSize - 1];
     }
 
