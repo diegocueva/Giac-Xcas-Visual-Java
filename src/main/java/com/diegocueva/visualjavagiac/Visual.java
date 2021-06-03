@@ -29,11 +29,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.image.BufferedImage;
 import javagiac.context;
 import javagiac.gen;
 import javagiac.giac;
 
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -53,7 +55,7 @@ public final class Visual extends JFrame
     /**
      * STACK SIZE !!!
      */
-    public static final int STACK_SIZE = 150;
+    public static final int STACK_SIZE = 3;
 
     /**
      * Font for list elements
@@ -129,7 +131,7 @@ public final class Visual extends JFrame
     /**
      * Visual JLabel elements
      */
-    private final JLabel[] eLabels = new JLabel[STACK_SIZE * 2];
+    private final JComponent[] components = new JComponent[STACK_SIZE * 2];
 
     /**
      * Variables for symbolic solve
@@ -172,7 +174,6 @@ public final class Visual extends JFrame
     static {
         try {
             // System.load("/usr/local/lib/libgiacjava.so");
-
             loadWindowsLibrary();
         } catch (UnsatisfiedLinkError e) {
             System.err.println("Native code library failed to load. See the chapter on Dynamic Linking Problems in the SWIG Java documentation for help.\n" + e);
@@ -180,11 +181,6 @@ public final class Visual extends JFrame
         }
     }
 
-    /**
-     * Windows mechanism to load library: javagiac For windows you must run in
-     * this way: java -Djava.library.path=C:\tmp\javagiac javagiac.Visual where
-     * C:\tmp\javagiac is the directory containing JNI unpacked
-     */
     public static void loadWindowsLibrary() {
         System.out.println("java.library.path:\n" + System.getProperty("java.library.path"));
         System.loadLibrary("javagiac");
@@ -198,6 +194,7 @@ public final class Visual extends JFrame
      */
     public static void main(String[] args) {
         visual = new Visual();
+        visual.init();
         Thread thread = new Thread(visual);
         thread.start();
     }
@@ -208,11 +205,19 @@ public final class Visual extends JFrame
      */
     public Visual() {
         super("Giac/Xcas Visual Java");
-
+        stack = new Stack(STACK_SIZE, C);
+        cmdText = new JTextField();
+        expressions = new JList(components);
+        numExpression = new JList(numberLines);
+        twoList = new JPanel();
+        jsrcoll = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        FbButton = new JButton[FbLabel.length];
+    }
+    
+    public void init(){
         // Init giac context
         C = new context();
-        // Init stack
-        stack = new Stack(STACK_SIZE, C);
+
 
         this.addWindowListener(this);
         this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -221,36 +226,30 @@ public final class Visual extends JFrame
          * Labels for stack
          */
         for (int i = 0; i < STACK_SIZE; i++) {
-            eLabels[i * 2] = newJLabelInput();
-            eLabels[i * 2 + 1] = newJLabelResult();
+            components[i * 2] = newJLabelInput();
+            components[i * 2 + 1] = newJCanvasResult();
             numberLines[i * 2] = "" + String.format("%3d", STACK_SIZE - i) + ":";
             numberLines[i * 2 + 1] = " ";
         }
 
-        cmdText = new JTextField();
         cmdText.setFont(new Font("Courier New", Font.PLAIN, 14));
 
         alert.setFont(new Font("Courier New", Font.BOLD, 16));
         alert.setForeground(Color.red);
         alert.setBackground(Color.white);
 
-        expressions = new JList(eLabels);
-        expressions.setFont(new Font("Courier New", Font.PLAIN, 14));
         expressions.setAutoscrolls(true);
         expressions.addListSelectionListener(this);
         expressions.setCellRenderer(this);
 
-        numExpression = new JList(numberLines);
-        numExpression.setFont(new Font("Courier New", Font.BOLD, 13));
+        numExpression.setFont(new Font("Courier New", Font.BOLD, 14));
         numExpression.setAutoscrolls(true);
         numExpression.setEnabled(false);
 
-        twoList = new JPanel();
         twoList.setLayout(new BorderLayout());
-        twoList.add(BorderLayout.LINE_START, numExpression);
+        // twoList.add(BorderLayout.LINE_START, numExpression);
         twoList.add(BorderLayout.CENTER, expressions);
 
-        jsrcoll = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         jsrcoll.getViewport().add(twoList);
 
         button_C.setFont(FONT_BUTTON);
@@ -279,7 +278,6 @@ public final class Visual extends JFrame
         buttonsPannel.add(button_CL);
         buttonsPannel.add(button_C);
 
-        FbButton = new JButton[FbLabel.length];
         for (int i = 0; i < FbLabel.length; i++) {
             FbButton[i] = new JButton(FbLabel[i]);
             FbButton[i].setFont(FONT_BUTTON_SMALL);
@@ -306,8 +304,8 @@ public final class Visual extends JFrame
         cmdText.setFocusTraversalKeysEnabled(false);
         cmdText.addKeyListener(this);
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-        this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
-        this.setVisible(true);
+        super.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
+        super.setVisible(true);
         cmdText.requestFocus();
     }
 
@@ -365,25 +363,32 @@ public final class Visual extends JFrame
 
     public JLabel newJLabelInput() {
         JLabel res = new JLabel("", JLabel.LEFT);
-        res.setFont(FONT_LIST);
+        res.setFont(new Font("Courier New", Font.PLAIN, 14));
         return res;
     }
 
-    public JLabel newJLabelResult() {
-        JLabel res = new JLabel("", JLabel.RIGHT);
-        res.setFont(FONT_LIST);
+    public ExpressionCanvas newJCanvasResult() {
+        ExpressionCanvas res = new ExpressionCanvas("", JLabel.RIGHT);
+        res.setFont(new Font("Courier New", Font.PLAIN, 20));
         return res;
     }
 
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         int ind = index / 2;
         if ((index % 2) == 0) {
-            eLabels[index].setText(stack.getInput(ind));
+            ((JLabel)components[index]).setText(stack.getInput(ind));
         } else {
-            eLabels[index].setText(stack.getVisual(ind));
+            ExpressionCanvas expr = ((ExpressionCanvas)components[index]);
+            expr.setText(stack.getVisual(ind)+"\n_");
+            ExpressionCanvas canvas = ((ExpressionCanvas)components[index]);
+            BufferedImage image = stack.getImage(ind);
+            if(image != null){
+                canvas.setImageBuffer(image);
+                canvas.setLatexStr(stack.getLatex(ind));
+            }            
         }
 
-        return eLabels[index];
+        return components[index];
     }
 
     public void disableInputs() {

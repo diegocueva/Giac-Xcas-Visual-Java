@@ -11,7 +11,7 @@
  */
 package com.diegocueva.visualjavagiac;
 
-import java.awt.Image;
+import java.awt.image.BufferedImage;
 import javagiac.gen;
 
 public class StackElement {
@@ -20,7 +20,7 @@ public class StackElement {
     public String input;
     public String visual;
     public String latex;
-    public Image  image;
+    public BufferedImage  image;
 
     public StackElement() {
         input  = " ";
@@ -28,8 +28,10 @@ public class StackElement {
     }
 
     public void set(StackElement src) {
-        input = src.input;
-        visual = src.visual;
         result = src.result;
+        input  = src.input;
+        visual = src.visual;
+        latex  = src.latex;
+        image  = src.image;
     }    
 }

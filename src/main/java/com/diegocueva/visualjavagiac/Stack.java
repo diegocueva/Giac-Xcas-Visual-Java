@@ -11,6 +11,7 @@
  */
 package com.diegocueva.visualjavagiac;
 
+import java.awt.image.BufferedImage;
 import javagiac.context;
 import javagiac.gen;
 
@@ -80,6 +81,14 @@ public class Stack {
 
     public gen getResult(int index) {
         return elements[index].result;
+    }
+    
+    public BufferedImage getImage(int index) {
+        return elements[index].image;
+    }
+    
+    public String getLatex(int index) {
+        return elements[index].latex;
     }
 
     public String resultToString(gen result, context C) {

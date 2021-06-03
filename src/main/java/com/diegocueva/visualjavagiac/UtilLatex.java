@@ -28,7 +28,7 @@ public class UtilLatex {
         icon.setInsets(new Insets(5, 5, 5, 5));
         BufferedImage image = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = image.createGraphics();
-        g2.setColor(Color.white);
+        g2.setColor(Color.WHITE);
         g2.fillRect(0, 0, icon.getIconWidth(), icon.getIconHeight());
         JLabel jl = new JLabel();
         jl.setForeground(new Color(0, 0, 0));
