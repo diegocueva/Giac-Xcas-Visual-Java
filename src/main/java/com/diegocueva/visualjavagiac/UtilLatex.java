@@ -21,9 +21,9 @@ import org.scilab.forge.jlatexmath.TeXIcon;
 
 
 public class UtilLatex {
-    public static BufferedImage latexToImage(String latex){
+    public static BufferedImage latexToImage(String latex, int size){
         TeXFormula formula = new TeXFormula(latex);
-        TeXIcon icon = formula.createTeXIcon(TeXConstants.STYLE_DISPLAY, 14);
+        TeXIcon icon = formula.createTeXIcon(TeXConstants.STYLE_DISPLAY, size);
         BufferedImage image = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = image.createGraphics();
         g2.setColor(Color.WHITE);

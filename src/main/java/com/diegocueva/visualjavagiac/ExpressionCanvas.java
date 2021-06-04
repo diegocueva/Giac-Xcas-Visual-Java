@@ -40,6 +40,7 @@ public class ExpressionCanvas extends JComponent {
     public void setImageBuffer(BufferedImage imageBuffer) {
         this.imageBuffer = imageBuffer;
         this.setSize(this.imageBuffer.getWidth(), this.imageBuffer.getHeight());
+        this.setPreferredSize(new Dimension(this.imageBuffer.getWidth(), this.imageBuffer.getHeight()));
     }
 
     @Override
@@ -58,10 +59,7 @@ public class ExpressionCanvas extends JComponent {
 
     @Override
     public Dimension getPreferredSize() {
-        Log.debug("xxxx ");
         return new Dimension(this.imageBuffer.getWidth(), this.imageBuffer.getHeight());
     }
-
-
 
 }

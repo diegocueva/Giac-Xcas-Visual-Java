@@ -55,7 +55,7 @@ public final class Visual extends JFrame
     /**
      * STACK SIZE !!!
      */
-    public static final int STACK_SIZE = 3;
+    public static final int STACK_SIZE = 150;
 
     /**
      * Font for list elements
@@ -91,7 +91,7 @@ public final class Visual extends JFrame
     /**
      * Panel for numebr list and visual expressions
      */
-    private final JPanel twoList;
+    private final JPanel listPanel;
 
     /**
      * Singleton
@@ -198,7 +198,7 @@ public final class Visual extends JFrame
         stack       = new Stack(STACK_SIZE, C);
         cmdText     = new JTextField();
         expressions = new JList(components);
-        twoList     = new JPanel();
+        listPanel   = new JPanel();
         jsrcoll     = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         FbButton    = new JButton[FbLabel.length];
     }
@@ -206,7 +206,6 @@ public final class Visual extends JFrame
     public void init(){
         // Init giac context
         C = new context();
-
 
         this.addWindowListener(this);
         this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -229,10 +228,10 @@ public final class Visual extends JFrame
         expressions.addListSelectionListener(this);
         expressions.setCellRenderer(this);
 
-        twoList.setLayout(new BorderLayout());
-        twoList.add(BorderLayout.CENTER, expressions);
+        listPanel.setLayout(new BorderLayout());
+        listPanel.add(BorderLayout.CENTER, expressions);
 
-        jsrcoll.getViewport().add(twoList);
+        jsrcoll.getViewport().add(listPanel);
 
         button_C.setFont(FONT_BUTTON);
         button_CL.setFont(FONT_BUTTON);
@@ -337,10 +336,10 @@ public final class Visual extends JFrame
     }
 
     public void repaintElements() {
-        twoList.repaint();
+        listPanel.repaint();
         setPositionList();
-        cmdText.setText("");
         expressions.clearSelection();
+        cmdText.setText("");
         cmdText.requestFocus();
     }
 
@@ -356,18 +355,17 @@ public final class Visual extends JFrame
         return res;
     }
 
+    @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
         int ind = index / 2;
         if ((index % 2) == 0) {
             ((JLabel)components[index]).setText(stack.getInput(ind));
         } else {
-            ExpressionCanvas expr = ((ExpressionCanvas)components[index]);
-            // expr.setText("\n");
-            ExpressionCanvas canvas = ((ExpressionCanvas)components[index]);
             BufferedImage image = stack.getImage(ind);
             if(image != null){
-                canvas.setImageBuffer(image);
-                canvas.setLatexStr(stack.getLatex(ind));
+                ExpressionCanvas expressionCanvas = ((ExpressionCanvas)components[index]);                
+                expressionCanvas.setImageBuffer(image);
+                expressionCanvas.setLatexStr(stack.getLatex(ind));
             }            
         }
 
@@ -506,6 +504,9 @@ public final class Visual extends JFrame
                     String addResult = stack.getVisual(ind);
                     String previo = cmdText.getText();
                     cmdText.setText(previo + addResult);
+                    View view = new View();
+                    view.display( UtilLatex.latexToImage(stack.getLatex(ind), 24) );
+                    view.repaint();
                 }
                 cmdText.requestFocus();
                 expressions.clearSelection();

@@ -55,7 +55,7 @@ public class Stack {
         elements[stackSize - 1].result = result;
         String latexStr = resultToString(latex, C).replaceAll("^\"|\"$", "");        
         elements[stackSize - 1].latex  = latexStr;
-        elements[stackSize - 1].image  = UtilLatex.latexToImage(latexStr);
+        elements[stackSize - 1].image  = UtilLatex.latexToImage(latexStr, 14);
 
         return elements[stackSize - 1];
     }
