@@ -55,7 +55,7 @@ public final class Visual extends JFrame
     /**
      * STACK SIZE !!!
      */
-    public static final int STACK_SIZE = 3;
+    public static final int STACK_SIZE = 150;
 
     /**
      * Font for list elements
@@ -379,7 +379,7 @@ public final class Visual extends JFrame
             ((JLabel)components[index]).setText(stack.getInput(ind));
         } else {
             ExpressionCanvas expr = ((ExpressionCanvas)components[index]);
-            expr.setText(stack.getVisual(ind)+"\n_");
+            expr.setText("\n");
             ExpressionCanvas canvas = ((ExpressionCanvas)components[index]);
             BufferedImage image = stack.getImage(ind);
             if(image != null){

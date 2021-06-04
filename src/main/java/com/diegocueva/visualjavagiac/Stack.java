@@ -66,8 +66,7 @@ public class Stack {
 
     public void clear() {
         for (StackElement element : elements) {
-            element.input = " ";
-            element.visual = " ";
+            element.clear();
         }
     }
 

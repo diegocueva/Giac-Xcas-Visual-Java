@@ -24,7 +24,7 @@ import org.scilab.forge.jlatexmath.TeXIcon;
 public class UtilLatex {
     public static BufferedImage latexToImage(String latex){
         TeXFormula formula = new TeXFormula(latex);
-        TeXIcon icon = formula.createTeXIcon(TeXConstants.STYLE_DISPLAY, 12);
+        TeXIcon icon = formula.createTeXIcon(TeXConstants.STYLE_DISPLAY, 14);
         icon.setInsets(new Insets(5, 5, 5, 5));
         BufferedImage image = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = image.createGraphics();
@@ -34,6 +34,5 @@ public class UtilLatex {
         jl.setForeground(new Color(0, 0, 0));
         icon.paintIcon(jl, g2, 0, 0);
         return image;
-        // g.drawImage(image, 0, 0, null);
     }
 }

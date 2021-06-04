@@ -11,6 +11,8 @@
  */
 package com.diegocueva.visualjavagiac;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import javagiac.gen;
 
@@ -33,5 +35,21 @@ public class StackElement {
         visual = src.visual;
         latex  = src.latex;
         image  = src.image;
+    }
+    
+    public void clear(){
+        result = null;
+        input  = "";
+        visual = "";
+        latex  = "";
+        image  = buildDefaultImage();
+    }
+
+    public static BufferedImage buildDefaultImage(){
+        BufferedImage bufferedImage = new BufferedImage(200, 150, BufferedImage.TYPE_INT_RGB);
+        Graphics g = bufferedImage.getGraphics();
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, 200, 150);
+        return bufferedImage;
     }    
 }

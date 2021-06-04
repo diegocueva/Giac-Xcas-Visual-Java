@@ -11,10 +11,8 @@
  */
 package com.diegocueva.visualjavagiac;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import javax.swing.JLabel;
 import javax.swing.JTextArea;
 
 public class ExpressionCanvas extends JTextArea {
@@ -24,15 +22,12 @@ public class ExpressionCanvas extends JTextArea {
 
      public ExpressionCanvas(String text, int horizontalAlignment) {
         // super(text, horizontalAlignment);
-        super(text, 1, 5);
+        super(text, 3, 15);
 
-        super.setSize(200, 25);
-        this.imageBuffer =  new BufferedImage(200, 50, BufferedImage.TYPE_INT_RGB);
-        Graphics g = this.imageBuffer.getGraphics();
-        g.setColor(Color.WHITE);
-        g.fillRect(0, 0, super.getWidth(), super.getHeight());
+        super.setSize(200, 150);
+        this.imageBuffer = StackElement.buildDefaultImage();
     }
-
+     
     public String getLatexStr() {
         return latexStr;
     }
