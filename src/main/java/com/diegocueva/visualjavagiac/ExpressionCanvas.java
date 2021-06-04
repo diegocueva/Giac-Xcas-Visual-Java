@@ -11,20 +11,17 @@
  */
 package com.diegocueva.visualjavagiac;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import javax.swing.JTextArea;
+import javax.swing.JComponent;
 
-public class ExpressionCanvas extends JTextArea {
+public class ExpressionCanvas extends JComponent {
 
     private String latexStr;
     private BufferedImage imageBuffer;
 
      public ExpressionCanvas(String text, int horizontalAlignment) {
-        // super(text, horizontalAlignment);
-        super(text, 3, 15);
-
-        super.setSize(200, 150);
         this.imageBuffer = StackElement.buildDefaultImage();
     }
      
@@ -58,6 +55,13 @@ public class ExpressionCanvas extends JTextArea {
     public void update(Graphics g) {
         paint(g);
     }
+
+    @Override
+    public Dimension getPreferredSize() {
+        Log.debug("xxxx ");
+        return new Dimension(this.imageBuffer.getWidth(), this.imageBuffer.getHeight());
+    }
+
 
 
 }

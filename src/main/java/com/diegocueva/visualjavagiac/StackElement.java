@@ -46,10 +46,12 @@ public class StackElement {
     }
 
     public static BufferedImage buildDefaultImage(){
-        BufferedImage bufferedImage = new BufferedImage(200, 150, BufferedImage.TYPE_INT_RGB);
+        int width = 300;
+        int height= 60;
+        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics g = bufferedImage.getGraphics();
         g.setColor(Color.WHITE);
-        g.fillRect(0, 0, 200, 150);
+        g.fillRect(0, 0, width, height);
         return bufferedImage;
     }    
 }

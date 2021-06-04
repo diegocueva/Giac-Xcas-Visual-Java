@@ -52,9 +52,9 @@ public class LatexExample extends JFrame implements ActionListener {
     private final JPanel drawingArea;
 
     public LatexExample() {
-        this.setTitle("JLatexMath Example");
-        this.setSize(500, 500);
-        Container content = this.getContentPane();
+        super.setTitle("JLatexMath Example");
+        super.setSize(500, 500);
+        Container content = super.getContentPane();
         content.setLayout(new GridLayout(2, 1));
         this.latexSource = new JTextArea();
 

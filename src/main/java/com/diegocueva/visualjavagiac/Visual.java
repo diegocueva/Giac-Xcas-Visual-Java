@@ -55,7 +55,7 @@ public final class Visual extends JFrame
     /**
      * STACK SIZE !!!
      */
-    public static final int STACK_SIZE = 150;
+    public static final int STACK_SIZE = 3;
 
     /**
      * Font for list elements
@@ -79,11 +79,6 @@ public final class Visual extends JFrame
     private final JList expressions;
 
     /**
-     * Numerador de expresiones
-     */
-    private final JList numExpression;
-
-    /**
      * Para poder hacer scroll vertical
      */
     private final JScrollPane jsrcoll;
@@ -101,7 +96,7 @@ public final class Visual extends JFrame
     /**
      * Singleton
      */
-    private static Visual visual;
+    private static final Visual visual = new Visual();
 
     /**
      * Giac context
@@ -124,11 +119,6 @@ public final class Visual extends JFrame
     private final Stack stack;
 
     /**
-     * Number lines
-     */
-    private final String[] numberLines = new String[STACK_SIZE * 2];
-
-    /**
      * Visual JLabel elements
      */
     private final JComponent[] components = new JComponent[STACK_SIZE * 2];
@@ -143,10 +133,10 @@ public final class Visual extends JFrame
     /**
      * Util Buttons
      */
-    private final JButton button_C = new JButton("C");
-    private final JButton button_CL = new JButton("CL");
-    private final JButton button_N = new JButton("S=D");
-    private final JButton button_X = new JButton(String.valueOf(vars[indVar]));
+    private final JButton button_C   = new JButton("C");
+    private final JButton button_CL  = new JButton("CL");
+    private final JButton button_N   = new JButton("S=D");
+    private final JButton button_X   = new JButton("x");
     private final JButton button_CPY = new JButton("copy");
     private final JButton button_EVA = new JButton("eval");
 
@@ -176,15 +166,15 @@ public final class Visual extends JFrame
             // System.load("/usr/local/lib/libgiacjava.so");
             loadWindowsLibrary();
         } catch (UnsatisfiedLinkError e) {
-            System.err.println("Native code library failed to load. See the chapter on Dynamic Linking Problems in the SWIG Java documentation for help.\n" + e);
+            Log.error("Native code library failed to load. See the chapter on Dynamic Linking Problems in the SWIG Java documentation for help.\n", e);
             System.exit(1);
         }
     }
 
     public static void loadWindowsLibrary() {
-        System.out.println("java.library.path:\n" + System.getProperty("java.library.path"));
+        Log.info("java.library.path:\n" + System.getProperty("java.library.path"));
         System.loadLibrary("javagiac");
-        System.out.println("Loaded javagiac");
+        Log.info("Loaded javagiac");
     }
 
     /**
@@ -193,7 +183,7 @@ public final class Visual extends JFrame
      * @param args
      */
     public static void main(String[] args) {
-        visual = new Visual();
+        Log.init("GXVJ");        
         visual.init();
         Thread thread = new Thread(visual);
         thread.start();
@@ -203,15 +193,14 @@ public final class Visual extends JFrame
      * Constructor for main frame. Create visual components and build the swing
      * interface
      */
-    public Visual() {
+    private Visual() {
         super("Giac/Xcas Visual Java");
-        stack = new Stack(STACK_SIZE, C);
-        cmdText = new JTextField();
+        stack       = new Stack(STACK_SIZE, C);
+        cmdText     = new JTextField();
         expressions = new JList(components);
-        numExpression = new JList(numberLines);
-        twoList = new JPanel();
-        jsrcoll = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        FbButton = new JButton[FbLabel.length];
+        twoList     = new JPanel();
+        jsrcoll     = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        FbButton    = new JButton[FbLabel.length];
     }
     
     public void init(){
@@ -228,8 +217,6 @@ public final class Visual extends JFrame
         for (int i = 0; i < STACK_SIZE; i++) {
             components[i * 2] = newJLabelInput();
             components[i * 2 + 1] = newJCanvasResult();
-            numberLines[i * 2] = "" + String.format("%3d", STACK_SIZE - i) + ":";
-            numberLines[i * 2 + 1] = " ";
         }
 
         cmdText.setFont(new Font("Courier New", Font.PLAIN, 14));
@@ -242,12 +229,7 @@ public final class Visual extends JFrame
         expressions.addListSelectionListener(this);
         expressions.setCellRenderer(this);
 
-        numExpression.setFont(new Font("Courier New", Font.BOLD, 14));
-        numExpression.setAutoscrolls(true);
-        numExpression.setEnabled(false);
-
         twoList.setLayout(new BorderLayout());
-        // twoList.add(BorderLayout.LINE_START, numExpression);
         twoList.add(BorderLayout.CENTER, expressions);
 
         jsrcoll.getViewport().add(twoList);
@@ -320,6 +302,7 @@ public final class Visual extends JFrame
                     try {
                         wait();
                     } catch (InterruptedException e) {
+                        Log.error("", e);
                     }
                 }
             }
@@ -340,7 +323,7 @@ public final class Visual extends JFrame
                 alert.setText(ee.getMessage());
                 this.repaint();
                 setPositionList();
-                ee.printStackTrace();
+                Log.error("", ee);
             }
             toProcess = null;
             enableInputs();
@@ -379,7 +362,7 @@ public final class Visual extends JFrame
             ((JLabel)components[index]).setText(stack.getInput(ind));
         } else {
             ExpressionCanvas expr = ((ExpressionCanvas)components[index]);
-            expr.setText("\n");
+            // expr.setText("\n");
             ExpressionCanvas canvas = ((ExpressionCanvas)components[index]);
             BufferedImage image = stack.getImage(ind);
             if(image != null){
@@ -491,7 +474,7 @@ public final class Visual extends JFrame
     }
 
     public void windowClosing(WindowEvent e) {
-        System.out.println("Goodbye");
+        Log.info("Goodbye");
         System.exit(0);
     }
 

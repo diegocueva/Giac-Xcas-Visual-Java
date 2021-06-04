@@ -13,7 +13,6 @@ package com.diegocueva.visualjavagiac;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Insets;
 import java.awt.image.BufferedImage;
 import javax.swing.JLabel;
 import org.scilab.forge.jlatexmath.TeXConstants;
@@ -25,7 +24,6 @@ public class UtilLatex {
     public static BufferedImage latexToImage(String latex){
         TeXFormula formula = new TeXFormula(latex);
         TeXIcon icon = formula.createTeXIcon(TeXConstants.STYLE_DISPLAY, 14);
-        icon.setInsets(new Insets(5, 5, 5, 5));
         BufferedImage image = new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = image.createGraphics();
         g2.setColor(Color.WHITE);

@@ -92,7 +92,7 @@ public class Stack {
 
     public String resultToString(gen result, context C) {
         String resultStr = result.print(C);
-        System.out.println("# tpy="+result.getType()+" sbtpy="+result.getSubtype()+" tpy_u="+result.getType_unused()+" val="+result.getVal()+ " resv="+result.getReserved()+ " | "+resultStr);
+        Log.info("# tpy="+result.getType()+" sbtpy="+result.getSubtype()+" tpy_u="+result.getType_unused()+" val="+result.getVal()+ " resv="+result.getReserved()+ " | "+resultStr);
         return resultStr;
     }
 }
