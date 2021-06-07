@@ -9,7 +9,7 @@
  * Code released under GLP 3 http://www.gnu.org/copyleft/gpl.html
  *
  */
-package com.diegocueva.visualjavagiac;
+package com.diegocueva.gcasvisualjava;
 
 import java.awt.Color;
 import java.awt.Graphics2D;

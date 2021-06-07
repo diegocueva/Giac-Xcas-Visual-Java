@@ -11,6 +11,7 @@
  */
 package com.diegocueva.visualjavagiac;
 
+import com.diegocueva.gcasvisualjava.UtilLatex;
 import java.awt.image.BufferedImage;
 import javagiac.context;
 import javagiac.gen;
