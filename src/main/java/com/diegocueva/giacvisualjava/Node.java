@@ -11,7 +11,6 @@
  */
 package com.diegocueva.giacvisualjava;
 
-import com.diegocueva.visualjavagiac.Log;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -20,6 +19,7 @@ import java.awt.image.BufferedImage;
 import javagiac.context;
 import javagiac.gen;
 import javagiac.giac;
+import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -33,7 +33,7 @@ public class Node extends JPanel{
     private gen    result;
     private String latex;
     private BufferedImage  image;
-
+    
     private Node(){}
 
     public Node(int id, String input, context giacContext) {
@@ -52,6 +52,12 @@ public class Node extends JPanel{
         JLabel inputLabel = new JLabel(this.input);
         inputLabel.setFont(MainWindow.FONT_INPUT);
         inputLabel.setBackground(Color.WHITE);
+        JLabel idLabel = new JLabel(String.valueOf(this.id)+": ");
+        idLabel.setFont(MainWindow.FONT_INPUT);
+        idLabel.setBackground(Color.GRAY);
+        idLabel.setForeground(Color.red);
+        idLabel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 1));
+        
         JComponent outputVisual = new JComponent() {
             @Override
             public void paint(Graphics gg) {
@@ -75,6 +81,7 @@ public class Node extends JPanel{
         super.setLayout(new BorderLayout());
         super.setBackground(Color.WHITE);
         super.add(inputLabel, BorderLayout.PAGE_START);
+        super.add(idLabel, BorderLayout.LINE_START);
         super.add(outputVisual, BorderLayout.CENTER);
     }
 

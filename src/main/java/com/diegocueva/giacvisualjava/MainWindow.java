@@ -8,6 +8,16 @@
  *
  * Code released under GLP 3 http://www.gnu.org/copyleft/gpl.html
  *
+ * 
+        solve(x^2-x-1=0,x)
+        solve(x^3-x-27=0,x)
+        8/((8^(1/3))*(8^(1/3)))
+        desolve(3*x^3*diff(y)=((3*x^2-y^2)*y),y)
+        desolve(x*y'-2*y-x*exp(4/x)*y^3,y)
+        desolve(3*x^3*diff(y)=((3*x^2-y^2)*y),y)
+        factor_xn(-x^4+3)
+        collect((x^3-2*x^2+1)*sqrt(5))
+        factors([x^3-2*x^2+1,x^2-x])
  */
 package com.diegocueva.giacvisualjava;
 
@@ -17,7 +27,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,6 +36,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.Collections;
 import javagiac.context;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -34,6 +44,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
@@ -45,6 +56,7 @@ import javax.swing.event.ListSelectionListener;
 public class MainWindow extends JFrame implements KeyListener, AdjustmentListener, WindowListener, ActionListener, ListSelectionListener, ListCellRenderer {
     
     private static final long serialVersionUID = 1L;
+    public static final int LIST_SIZE = 150;
     
     private final context giacContext = new context();
     
@@ -58,28 +70,24 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
     private final JButton btnClearAll = new JButton("CL");
     private final JButton btnCopy     = new JButton("Copy");
     
+    private final JPanel listPanel = new JPanel(new BorderLayout());
     private final JList<Node> lstNodes;
-    // private final NodeListModel nodesModel;
-    private final DefaultListModel<Node> model;
+    private final DefaultListModel<Node> nodesModel;
     
     private final JTextField txtInput = new JTextField();
     private final JButton btnClear    = new JButton("C");
     
     public static final Font FONT_ALERT  = new Font("Courier New", Font.PLAIN, 16);
-    public static final Font FONT_LIST   = new Font("Courier New", Font.PLAIN, 12);
     public static final Font FONT_INPUT  = new Font("Courier New", Font.PLAIN, 14);
     public static final Font FONT_BUTTON = new Font("Courier New", Font.PLAIN, 12);
-    public static final Font FONT_OUTPUT = new Font("Courier New", Font.PLAIN, 14);
     
     private static boolean initScroll = false;
     
     public MainWindow(){
         super("Giac Visual Java");
         super.setLayout(new BorderLayout());
-        // this.nodesModel = new NodeListModel();
-        this.model = new DefaultListModel();
-        // this.lstNodes  = new JList<>(nodesModel);
-        this.lstNodes = new JList<>(this.model);
+        this.nodesModel = new DefaultListModel();
+        this.lstNodes = new JList<>(this.nodesModel);
     }
     
     public void display(){
@@ -102,16 +110,15 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
         this.add(BorderLayout.NORTH, panelNorth);
         
         //-- CENTER PANEL
-        lstNodes.setFont(FONT_LIST);
         lstNodes.setAutoscrolls(true);
         lstNodes.setBackground(Color.WHITE);
-        //lstNodes.addListSelectionListener(this);
+        lstNodes.addListSelectionListener(this);
         lstNodes.setCellRenderer(this);
-        // scrllList.getViewport().add(lstNodes);
-        scrllList.getViewport().add(lstNodes);
-        scrllList.getVerticalScrollBar().addAdjustmentListener(this);
-        scrllList.setFocusable(false);
+        listPanel.add(BorderLayout.CENTER, lstNodes);
+        scrllList.getViewport().add(listPanel);        
         this.add(BorderLayout.CENTER, scrllList);
+        scrllList.getVerticalScrollBar().addAdjustmentListener(this);
+        scrllList.setFocusable(false);        
         
         //-- BOTTOM PANEL
         btnClear.setFont(FONT_BUTTON);
@@ -155,38 +162,55 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
     private void processInput(String input){
         try{
             Log.debug("processInput "+input);
-            //Node node = new Node(nodesModel.getMaxId(), input, giacContext);
-            //nodesModel.addNode(node);
-            lblAlert.setText(" ");
-            txtInput.setText("");
+            int id = Collections.list(nodesModel.elements()).stream().mapToInt(n->n.getId()).max().orElse(0);
+            lblAlert.setText("");
             txtInput.requestFocus();
-            // lstNodes.repaint();
-            Node node = new Node(model.getSize()+1, input, giacContext);
-            model.addElement(node);
-            scrllList.repaint();
-            lstNodes.repaint();
+            Node node = new Node(id+1, input, giacContext);
+            nodesModel.addElement(node);
+            inputsEnable(true);            
+            afterProcess();
         } catch (Throwable e) {
             lblAlert.setText(e.getMessage());
             this.repaint();
-            Log.error("", e);
-        }finally{
-            inputsEnable(true);
+            lstNodes.clearSelection();
             setPositionList();
+            Log.error("", e);
+            inputsEnable(true);
         }
+    }
+    
+    private void afterProcess(){
+        listPanel.repaint();
+        lstNodes.clearSelection();
+        txtInput.setText("");
+        txtInput.requestFocus();        
+        setPositionList();        
     }
     
     private void setPositionList() {
         initScroll = false;
-        scrllList.getViewport().setViewPosition(new Point(0, 0));
+        // scrllList.getViewport().setViewPosition(new Point(100, 100));
+        JScrollBar vertical = scrllList.getVerticalScrollBar();
+        vertical.setValue( vertical.getMaximum() );
     }
     
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        return model.getElementAt(index);
+        return nodesModel.getElementAt(index);
     }
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        Log.debug("valueChanged");
+        if (e.getSource() == lstNodes && e.getValueIsAdjusting()) {
+            int index = lstNodes.getSelectedIndex();
+            if (index >= 0) {
+                Node node = nodesModel.get(index);
+                txtInput.requestFocus();
+                lstNodes.clearSelection();
+                ViewNode viewNode = new ViewNode();
+                viewNode.display(node);
+            }
+        }
+        
     }
     
     @Override

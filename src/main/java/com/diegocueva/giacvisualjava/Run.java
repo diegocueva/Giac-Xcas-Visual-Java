@@ -25,7 +25,7 @@ public class Run {
         MainWindow mainWindow = new MainWindow();
         mainWindow.display();
     } 
-    public static void loadWindowsLibrary() {
+    private static void loadWindowsLibrary() {
         try{
             Log.info("java.library.path:\n" + System.getProperty("java.library.path"));
             System.loadLibrary("javagiac");
