@@ -9,16 +9,17 @@
  * Code released under GLP 3 http://www.gnu.org/copyleft/gpl.html
  *
  */
-package com.diegocueva.gcasvisualjava;
+package com.diegocueva.giacvisualjava;
 
+import com.diegocueva.visualjavagiac.Log;
 import java.util.Arrays;
-import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
 
 /**
  *
  * @author dcueva
  */
-public class NodeListModel extends AbstractListModel<Node>{
+public class NodeListModel extends DefaultListModel<Node>{
 
     public static final int LIST_SIZE = 10;
     private final Node[] nodes = new Node[LIST_SIZE];
@@ -27,11 +28,13 @@ public class NodeListModel extends AbstractListModel<Node>{
     
     @Override
     public int getSize() {
+        Log.debug("getSize "+ind);
         return ind;
     }
 
     @Override
     public Node getElementAt(int index) {
+        Log.debug("getElementAt "+index);
         return nodes[index];
     }
     

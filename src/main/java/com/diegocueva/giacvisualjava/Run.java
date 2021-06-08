@@ -9,7 +9,8 @@
  * Code released under GLP 3 http://www.gnu.org/copyleft/gpl.html
  *
  */
-package com.diegocueva.gcasvisualjava;
+package com.diegocueva.giacvisualjava;
+
 
 import com.diegocueva.visualjavagiac.Log;
 

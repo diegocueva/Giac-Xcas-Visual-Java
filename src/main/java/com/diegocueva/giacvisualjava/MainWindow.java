@@ -9,7 +9,7 @@
  * Code released under GLP 3 http://www.gnu.org/copyleft/gpl.html
  *
  */
-package com.diegocueva.gcasvisualjava;
+package com.diegocueva.giacvisualjava;
 
 import com.diegocueva.visualjavagiac.Log;
 import java.awt.BorderLayout;
@@ -17,6 +17,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,6 +28,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import javagiac.context;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -57,7 +59,8 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
     private final JButton btnCopy     = new JButton("Copy");
     
     private final JList<Node> lstNodes;
-    private final NodeListModel nodesModel;
+    // private final NodeListModel nodesModel;
+    private final DefaultListModel<Node> model;
     
     private final JTextField txtInput = new JTextField();
     private final JButton btnClear    = new JButton("C");
@@ -68,11 +71,15 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
     public static final Font FONT_BUTTON = new Font("Courier New", Font.PLAIN, 12);
     public static final Font FONT_OUTPUT = new Font("Courier New", Font.PLAIN, 14);
     
+    private static boolean initScroll = false;
+    
     public MainWindow(){
         super("Giac Visual Java");
         super.setLayout(new BorderLayout());
-        this.nodesModel = new NodeListModel();
-        this.lstNodes  = new JList<>(nodesModel);
+        // this.nodesModel = new NodeListModel();
+        this.model = new DefaultListModel();
+        // this.lstNodes  = new JList<>(nodesModel);
+        this.lstNodes = new JList<>(this.model);
     }
     
     public void display(){
@@ -97,8 +104,10 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
         //-- CENTER PANEL
         lstNodes.setFont(FONT_LIST);
         lstNodes.setAutoscrolls(true);
-        lstNodes.addListSelectionListener(this);
-        lstNodes.setCellRenderer(this);        
+        lstNodes.setBackground(Color.WHITE);
+        //lstNodes.addListSelectionListener(this);
+        lstNodes.setCellRenderer(this);
+        // scrllList.getViewport().add(lstNodes);
         scrllList.getViewport().add(lstNodes);
         scrllList.getVerticalScrollBar().addAdjustmentListener(this);
         scrllList.setFocusable(false);
@@ -145,27 +154,35 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
      */
     private void processInput(String input){
         try{
-            Log.debug("----"+input);
-            Node node = new Node(nodesModel.getMaxId(), input, giacContext);
-            nodesModel.addNode(node);
+            Log.debug("processInput "+input);
+            //Node node = new Node(nodesModel.getMaxId(), input, giacContext);
+            //nodesModel.addNode(node);
             lblAlert.setText(" ");
             txtInput.setText("");
             txtInput.requestFocus();
+            // lstNodes.repaint();
+            Node node = new Node(model.getSize()+1, input, giacContext);
+            model.addElement(node);
+            scrllList.repaint();
             lstNodes.repaint();
         } catch (Throwable e) {
             lblAlert.setText(e.getMessage());
             this.repaint();
-            // setPositionList();
             Log.error("", e);
         }finally{
             inputsEnable(true);
+            setPositionList();
         }
+    }
+    
+    private void setPositionList() {
+        initScroll = false;
+        scrllList.getViewport().setViewPosition(new Point(0, 0));
     }
     
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        Log.debug("getListCellRendererComponent");
-        return nodesModel.getElementAt(index);
+        return model.getElementAt(index);
     }
     @Override
     public void valueChanged(ListSelectionEvent e) {
@@ -174,8 +191,10 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
     
     @Override
     public void adjustmentValueChanged(AdjustmentEvent adjustmentEvent) {
-        Log.debug("adjustmentValueChanged");
-        adjustmentEvent.getAdjustable().setValue(adjustmentEvent.getAdjustable().getMaximum());
+        if (!initScroll) {
+            initScroll = true;
+            adjustmentEvent.getAdjustable().setValue(adjustmentEvent.getAdjustable().getMaximum());
+        }
     }
     
     @Override public void windowOpened(WindowEvent e) {}

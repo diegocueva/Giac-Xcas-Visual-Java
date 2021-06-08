@@ -1,5 +1,5 @@
 
-package com.diegocueva.gcasvisualjava;
+package com.diegocueva.giacvisualjava;
 
 import com.diegocueva.visualjavagiac.Log;
 import javagiac.context;

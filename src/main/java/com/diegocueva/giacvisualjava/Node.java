@@ -9,10 +9,11 @@
  * Code released under GLP 3 http://www.gnu.org/copyleft/gpl.html
  *
  */
-package com.diegocueva.gcasvisualjava;
+package com.diegocueva.giacvisualjava;
 
 import com.diegocueva.visualjavagiac.Log;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -50,6 +51,7 @@ public class Node extends JPanel{
         
         JLabel inputLabel = new JLabel(this.input);
         inputLabel.setFont(MainWindow.FONT_INPUT);
+        inputLabel.setBackground(Color.WHITE);
         JComponent outputVisual = new JComponent() {
             @Override
             public void paint(Graphics gg) {
@@ -67,11 +69,11 @@ public class Node extends JPanel{
 
             @Override
             public Dimension getPreferredSize() {
-                Log.debug("xxx");
                 return new Dimension(image.getWidth(), image.getHeight());
             }
         };
         super.setLayout(new BorderLayout());
+        super.setBackground(Color.WHITE);
         super.add(inputLabel, BorderLayout.PAGE_START);
         super.add(outputVisual, BorderLayout.CENTER);
     }

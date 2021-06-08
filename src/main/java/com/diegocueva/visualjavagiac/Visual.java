@@ -11,7 +11,7 @@
  */
 package com.diegocueva.visualjavagiac;
 
-import com.diegocueva.gcasvisualjava.UtilLatex;
+import com.diegocueva.giacvisualjava.UtilLatex;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
