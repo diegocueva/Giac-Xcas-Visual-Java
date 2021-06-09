@@ -23,6 +23,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class Node extends JPanel{
     private int id;
@@ -47,16 +48,17 @@ public class Node extends JPanel{
         this.result = e;
         this.output = UtilGiac.resultToString(e, giacContext);
         this.latex  = UtilGiac.resultToString(l, giacContext).replaceAll("^\"|\"$", "");
-        this.image  = UtilLatex.latexToImage(this.latex, 12);
+        this.image  = UtilLatex.latexToImage(this.latex, 18);
         
-        JLabel inputLabel = new JLabel(this.input);
+        JTextField inputLabel = new JTextField(this.input);
         inputLabel.setFont(MainWindow.FONT_INPUT);
         inputLabel.setBackground(Color.WHITE);
+        inputLabel.setEditable(false);
         JLabel idLabel = new JLabel(String.valueOf(this.id)+": ");
         idLabel.setFont(MainWindow.FONT_INPUT);
         idLabel.setBackground(Color.GRAY);
-        idLabel.setForeground(Color.red);
-        idLabel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 1));
+        idLabel.setForeground(Color.RED);
+        idLabel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
         
         JComponent outputVisual = new JComponent() {
             @Override
@@ -83,6 +85,7 @@ public class Node extends JPanel{
         super.add(inputLabel, BorderLayout.PAGE_START);
         super.add(idLabel, BorderLayout.LINE_START);
         super.add(outputVisual, BorderLayout.CENTER);
+        super.add(new JLabel("  "), BorderLayout.SOUTH);
     }
 
     public int getId() {

@@ -11,9 +11,6 @@
  */
 package com.diegocueva.giacvisualjava;
 
-
-import com.diegocueva.visualjavagiac.Log;
-
 /**
  *
  * @author dcueva

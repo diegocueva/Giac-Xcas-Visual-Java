@@ -21,7 +21,6 @@
  */
 package com.diegocueva.giacvisualjava;
 
-import com.diegocueva.visualjavagiac.Log;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -68,7 +67,6 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
     
     private final JLabel  lblAlert    = new JLabel("Welcome to CAS world");
     private final JButton btnClearAll = new JButton("CL");
-    private final JButton btnCopy     = new JButton("Copy");
     
     private final JPanel listPanel = new JPanel(new BorderLayout());
     private final JList<Node> lstNodes;
@@ -76,10 +74,12 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
     
     private final JTextField txtInput = new JTextField();
     private final JButton btnClear    = new JButton("C");
-    
+    private final ViewerManager viewerManager = new ViewerManager();
+            
     public static final Font FONT_ALERT  = new Font("Courier New", Font.PLAIN, 16);
     public static final Font FONT_INPUT  = new Font("Courier New", Font.PLAIN, 14);
-    public static final Font FONT_BUTTON = new Font("Courier New", Font.PLAIN, 12);
+    public static final Font FONT_OUTPUT = new Font("Courier New", Font.ITALIC, 12);
+    public static final Font FONT_BUTTON = new Font("Courier New", Font.BOLD, 12);
     
     private static boolean initScroll = false;
     
@@ -99,10 +99,7 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
         btnClearAll.setFont(FONT_BUTTON);
         btnClearAll.setForeground(Color.red);
         btnClearAll.addActionListener(this);
-        btnCopy.setFont(FONT_BUTTON);
-        btnCopy.addActionListener(this);
         panelUpperLineEnd.add(btnClearAll, BorderLayout.LINE_START);
-        panelUpperLineEnd.add(btnCopy, BorderLayout.LINE_END);
         
         panelNorth.add(panelUpperLineEnd, BorderLayout.LINE_END);
         panelNorth.add(lblAlert, BorderLayout.CENTER);
@@ -146,7 +143,6 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
     private void inputsEnable(boolean enable){
         btnClear.setEnabled(enable);
         btnClearAll.setEnabled(enable);
-        btnCopy.setEnabled(enable);
         txtInput.setEnabled(enable);
         scrllList.setEnabled(enable);
         if(!enable){
@@ -189,7 +185,6 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
     
     private void setPositionList() {
         initScroll = false;
-        // scrllList.getViewport().setViewPosition(new Point(100, 100));
         JScrollBar vertical = scrllList.getVerticalScrollBar();
         vertical.setValue( vertical.getMaximum() );
     }
@@ -206,8 +201,7 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
                 Node node = nodesModel.get(index);
                 txtInput.requestFocus();
                 lstNodes.clearSelection();
-                ViewNode viewNode = new ViewNode();
-                viewNode.display(node);
+                viewerManager.add(node);
             }
         }
         
@@ -239,7 +233,7 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
     public void keyReleased(KeyEvent keyEvent) {
         //Log.debug("keyReleased "+keyEvent);
         lblAlert.setText(" ");
-        if (keyEvent.getKeyCode() == 10 && txtInput.getText() != null && txtInput.getText().length()>2) {
+        if (keyEvent.getKeyCode() == 10 && txtInput.getText() != null && txtInput.getText().length()>=1) {
             inputsEnable(false);
             SwingUtilities.invokeLater(() -> {
                 processInput(txtInput.getText());
@@ -249,7 +243,13 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
     
     @Override
     public void actionPerformed(ActionEvent actionEvent) {    
-        Log.debug("actionPerformed "+actionEvent);
+        if(actionEvent.getSource()==btnClear){
+            this.txtInput.setText("");
+        }
+        if(actionEvent.getSource()==btnClearAll){
+            this.nodesModel.clear();
+            afterProcess();
+        }
     }
 
 }

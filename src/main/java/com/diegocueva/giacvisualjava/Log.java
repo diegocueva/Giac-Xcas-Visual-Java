@@ -1,4 +1,4 @@
-package com.diegocueva.visualjavagiac;
+package com.diegocueva.giacvisualjava;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
