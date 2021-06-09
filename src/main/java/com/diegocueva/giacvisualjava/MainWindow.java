@@ -64,7 +64,7 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
     private final JPanel panelBottom        = new JPanel(new BorderLayout());
     private final JPanel panelBottomLineEnd = new JPanel(new BorderLayout());
     
-    private final JTextField lblAlert = new JTextField("Welcome to CAS world");
+    private final JTextField lblAlert = new JTextField("www.diegocueva.com");
     private final JButton btnClearAll = new JButton("CL");
     
     private final JPanel listPanel = new JPanel(new BorderLayout());
@@ -80,7 +80,8 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
     public static final Font FONT_OUTPUT = new Font("Courier New", Font.ITALIC, 12);
     public static final Font FONT_BUTTON = new Font("Courier New", Font.BOLD, 12);
     
-    private static boolean initScroll = false;
+    private boolean initScroll = false;
+    private int     indCursor  = 0;
     
     public MainWindow(){
         super("Giac Visual Java");
@@ -161,6 +162,9 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
             int id = Collections.list(nodesModel.elements()).stream().mapToInt(n->n.getId()).max().orElse(0);
             txtInput.requestFocus();
             Node node = new Node(id+1, input, giacContext);
+            if(nodesModel.size() >= LIST_SIZE){
+                nodesModel.remove(0);
+            }
             nodesModel.addElement(node);
             lblAlert.setText(node.getOutput());
             inputsEnable(true);            
@@ -180,7 +184,8 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
         lstNodes.clearSelection();
         txtInput.setText("");
         txtInput.requestFocus();        
-        setPositionList();        
+        setPositionList();
+        indCursor=0;
     }
     
     private void setPositionList() {
@@ -231,14 +236,35 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
     @Override public void keyPressed(KeyEvent e) {}
     @Override
     public void keyReleased(KeyEvent keyEvent) {
-        //Log.debug("keyReleased "+keyEvent);
-        lblAlert.setText(" ");
-        if (keyEvent.getKeyCode() == 10 && txtInput.getText() != null && txtInput.getText().length()>=1) {
-            inputsEnable(false);
-            SwingUtilities.invokeLater(() -> {
-                processInput(txtInput.getText());
-            });
+        
+        if(keyEvent.getSource() == txtInput){
+            lblAlert.setText(" ");
+            if (keyEvent.getKeyCode() == 10 && txtInput.getText() != null && txtInput.getText().length()>=1) {
+                inputsEnable(false);
+                SwingUtilities.invokeLater(() -> {
+                    processInput(txtInput.getText());
+                });
+            }else if(nodesModel.size()>=1){
+                switch (keyEvent.getKeyCode()) {
+                    case KeyEvent.VK_UP:
+                        if (indCursor < nodesModel.size()) {
+                            txtInput.setText(nodesModel.get(nodesModel.size()-indCursor-1).getInput());
+                            indCursor++;
+                        }
+                        break;
+                    case KeyEvent.VK_DOWN:
+                        if (indCursor > 1) {
+                            txtInput.setText(nodesModel.get(nodesModel.size()-indCursor+1).getInput());
+                            indCursor--;
+                        }else{
+                            txtInput.setText("");
+                            indCursor=0;
+                        }
+                        break;
+                }            
+            }            
         }
+
     }
     
     @Override

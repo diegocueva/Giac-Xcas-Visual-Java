@@ -19,7 +19,6 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
@@ -39,7 +38,7 @@ public class ViewNode extends JFrame{
     }
     
     public void display(Node node){
-        this.bufferedImage = UtilLatex.latexToImage(node.getLatex(), 26);
+        this.bufferedImage = UtilLatex.latexToImage(node.getLatexOut(), 26);
         
         component = new JComponent() {
             @Override

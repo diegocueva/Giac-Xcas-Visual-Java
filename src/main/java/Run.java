@@ -14,11 +14,6 @@ import com.diegocueva.giacvisualjava.MainWindow;
  *
  */
 
-
-/**
- *
- * @author dcueva
- */
 public class Run {
     public static void main(String[] arg){
         Log.init("GVJ");

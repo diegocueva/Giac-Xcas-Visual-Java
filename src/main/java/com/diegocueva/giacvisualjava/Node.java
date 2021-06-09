@@ -32,8 +32,10 @@ public class Node extends JPanel{
     private String output;
     
     private gen    result;
-    private String latex;
-    private BufferedImage  image;
+    private String latexIn;
+    private String latexOut;
+    private BufferedImage  imageIn;
+    private BufferedImage  imageOut;
     
     private Node(){}
 
@@ -41,14 +43,20 @@ public class Node extends JPanel{
         this.id    = id;
         this.input = input;
         gen g = new gen (input, giacContext);
-        gen f = giac._factor(g, giacContext);
+        gen i = giac._latex (g, giacContext);
+        gen f = giac._factor(g, giacContext);        
         gen e = giac._eval  (f, giacContext);
-        gen l = giac._latex (e, giacContext);
+        gen l = giac._latex (e, giacContext);        
         
-        this.result = e;
-        this.output = UtilGiac.resultToString(e, giacContext);
-        this.latex  = UtilGiac.resultToString(l, giacContext).replaceAll("^\"|\"$", "");
-        this.image  = UtilLatex.latexToImage(this.latex, 18);
+        this.result   = e;
+        this.output   = UtilGiac.resultToString(e, giacContext);
+        this.latexIn  = UtilGiac.resultToString(i, giacContext).replaceAll("^\"|\"$", "");
+        this.imageIn  = UtilLatex.latexToImage(this.latexIn, 18);
+        this.latexOut = UtilGiac.resultToString(l, giacContext).replaceAll("^\"|\"$", "");
+        this.imageOut = UtilLatex.latexToImage(this.latexOut, 18);
+        
+        Log.debug("### latexIn : "+this.latexIn);
+        Log.debug("### latexOut: "+this.latexOut);
         
         JTextField inputLabel = new JTextField(this.input);
         inputLabel.setFont(MainWindow.FONT_INPUT);
@@ -59,33 +67,17 @@ public class Node extends JPanel{
         idLabel.setBackground(Color.GRAY);
         idLabel.setForeground(Color.RED);
         idLabel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+                
+        JPanel upperPanel = new JPanel(new BorderLayout());
+        upperPanel.setBackground(Color.WHITE);
+        upperPanel.add(idLabel,                       BorderLayout.LINE_START);
+        upperPanel.add(buildVisualComponent(imageIn), BorderLayout.CENTER);
         
-        JComponent outputVisual = new JComponent() {
-            @Override
-            public void paint(Graphics gg) {
-                super.paint(gg);
-                if (image != null) {
-                    this.setSize(image.getWidth(), image.getHeight());
-                    gg.drawImage(image, 0, 0, null);
-                }
-            }
-
-            @Override
-            public void update(Graphics g) {
-                paint(g);
-            }
-
-            @Override
-            public Dimension getPreferredSize() {
-                return new Dimension(image.getWidth(), image.getHeight());
-            }
-        };
         super.setLayout(new BorderLayout());
         super.setBackground(Color.WHITE);
-        super.add(inputLabel, BorderLayout.PAGE_START);
-        super.add(idLabel, BorderLayout.LINE_START);
-        super.add(outputVisual, BorderLayout.CENTER);
-        super.add(new JLabel("  "), BorderLayout.SOUTH);
+        super.add(upperPanel,                    BorderLayout.PAGE_START);
+        super.add(buildVisualComponent(imageOut),BorderLayout.CENTER);
+        super.add(new JLabel("  "),              BorderLayout.SOUTH);
     }
 
     public int getId() {
@@ -120,20 +112,20 @@ public class Node extends JPanel{
         this.result = result;
     }
 
-    public String getLatex() {
-        return latex;
+    public String getLatexIn() {
+        return latexIn;
     }
 
-    public void setLatex(String latex) {
-        this.latex = latex;
+    public void setLatexIn(String latexIn) {
+        this.latexIn = latexIn;
     }
 
-    public BufferedImage getImage() {
-        return image;
+    public String getLatexOut() {
+        return latexOut;
     }
 
-    public void setImage(BufferedImage image) {
-        this.image = image;
+    public void setLatexOut(String latexOut) {
+        this.latexOut = latexOut;
     }
 
     @Override
@@ -164,6 +156,29 @@ public class Node extends JPanel{
     @Override
     public String toString() {
         return "Node{" + "id=" + id + ", in=" + input + ", out=" + output + '}';
+    }
+    
+    private JComponent buildVisualComponent(BufferedImage image){
+        return new JComponent() {
+            @Override
+            public void paint(Graphics gg) {
+                super.paint(gg);
+                if (image != null) {
+                    this.setSize(image.getWidth(), image.getHeight());
+                    gg.drawImage(image, 0, 0, null);
+                }
+            }
+
+            @Override
+            public void update(Graphics g) {
+                paint(g);
+            }
+
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(image.getWidth(), image.getHeight());
+            }
+        };        
     }
 
 }
