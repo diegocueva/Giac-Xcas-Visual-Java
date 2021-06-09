@@ -40,7 +40,6 @@ import javagiac.context;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
@@ -65,7 +64,7 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
     private final JPanel panelBottom        = new JPanel(new BorderLayout());
     private final JPanel panelBottomLineEnd = new JPanel(new BorderLayout());
     
-    private final JLabel  lblAlert    = new JLabel("Welcome to CAS world");
+    private final JTextField lblAlert = new JTextField("Welcome to CAS world");
     private final JButton btnClearAll = new JButton("CL");
     
     private final JPanel listPanel = new JPanel(new BorderLayout());
@@ -95,6 +94,7 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
         lblAlert.setFont(FONT_ALERT);
         lblAlert.setForeground(Color.RED);
         lblAlert.setBackground(Color.WHITE);
+        lblAlert.setEditable(false);
         
         btnClearAll.setFont(FONT_BUTTON);
         btnClearAll.setForeground(Color.red);
@@ -159,10 +159,10 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
         try{
             Log.debug("processInput "+input);
             int id = Collections.list(nodesModel.elements()).stream().mapToInt(n->n.getId()).max().orElse(0);
-            lblAlert.setText("");
             txtInput.requestFocus();
             Node node = new Node(id+1, input, giacContext);
             nodesModel.addElement(node);
+            lblAlert.setText(node.getOutput());
             inputsEnable(true);            
             afterProcess();
         } catch (Throwable e) {
