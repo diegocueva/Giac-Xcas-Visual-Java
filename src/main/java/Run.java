@@ -1,3 +1,7 @@
+
+import com.diegocueva.giacvisualjava.Log;
+import com.diegocueva.giacvisualjava.MainWindow;
+
 /**
  * ******************************************
  * Java swing single interface for giac
@@ -9,7 +13,7 @@
  * Code released under GLP 3 http://www.gnu.org/copyleft/gpl.html
  *
  */
-package com.diegocueva.giacvisualjava;
+
 
 /**
  *

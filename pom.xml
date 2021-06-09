@@ -10,13 +10,13 @@
     <groupId>com.diegocueva</groupId>
     <artifactId>visualjavagiac</artifactId>
     <version>1</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     
     <name>Giac Visual Java</name>
     
     <properties>
         <java.version>1.8</java.version>
-        <start-class>com.diegocueva.visualjavagiac.Run</start-class>
+        <start-class>com.diegocueva.giacvisualjava.Run</start-class>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -41,16 +41,13 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>            
-            <plugin>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.4</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.2</version>
                 <configuration>
-                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <finalName>gjv</finalName>                   
                 </configuration>
-            </plugin>        
+            </plugin>  
         </plugins>
     </build>
     
