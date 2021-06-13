@@ -1,8 +1,9 @@
 # Giac-Visual-Java
 
-Java Swing Interface for
-
+Java Swing Interface for: 
 [Giac/xcas, a free computer algebra system](https://www-fourier.ujf-grenoble.fr/~parisse/giac.html)
+
+![Image Example](index.png)
 
 Giac-Visual-Java is a computer algebra system (CAS) or symbolic algebra system (SAS), 
 is a software with the ability to manipulate mathematical expressions in a way similar 
