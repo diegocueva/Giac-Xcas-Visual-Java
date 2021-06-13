@@ -14,6 +14,6 @@ Example how to use:
 [https://youtu.be/4ukK9IfMD9E](https://youtu.be/4ukK9IfMD9E)
 
 By:
-   [www.diegocueva.com](www.diegocueva.com)
+   [www.diegocueva.com](http://www.diegocueva.com)
    
 
