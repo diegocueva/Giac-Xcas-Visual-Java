@@ -1,4 +1,4 @@
-# Giac-Visual-Java
+# Giac Visual Java
 
 Java Swing Interface for: 
 [Giac/xcas, a free computer algebra system](https://www-fourier.ujf-grenoble.fr/~parisse/giac.html)
