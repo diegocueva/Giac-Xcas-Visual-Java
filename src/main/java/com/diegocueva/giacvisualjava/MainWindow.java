@@ -236,7 +236,6 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
     @Override public void keyPressed(KeyEvent e) {}
     @Override
     public void keyReleased(KeyEvent keyEvent) {
-        
         if(keyEvent.getSource() == txtInput){
             lblAlert.setText(" ");
             if (keyEvent.getKeyCode() == 10 && txtInput.getText() != null && txtInput.getText().length()>=1) {
@@ -274,6 +273,7 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
         }
         if(actionEvent.getSource()==btnClearAll){
             this.nodesModel.clear();
+            this.viewerManager.clear();
             afterProcess();
         }
     }

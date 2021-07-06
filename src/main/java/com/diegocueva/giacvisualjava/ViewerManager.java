@@ -33,4 +33,7 @@ public class ViewerManager {
         }
     }
     
+    public void clear(){
+        viewersMap.clear();
+    }
 }
