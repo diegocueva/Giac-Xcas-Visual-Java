@@ -35,7 +35,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import javagiac.context;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -70,6 +72,7 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
     private final JPanel listPanel = new JPanel(new BorderLayout());
     private final JList<Node> lstNodes;
     private final DefaultListModel<Node> nodesModel;
+    private final List<String>           history;
     
     private final JTextField txtInput = new JTextField();
     private final JButton btnClear    = new JButton("C");
@@ -88,6 +91,7 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
         super.setLayout(new BorderLayout());
         this.nodesModel = new DefaultListModel();
         this.lstNodes = new JList<>(this.nodesModel);
+        this.history  = new ArrayList<>();
     }
     
     public void display(){
@@ -169,6 +173,7 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
             lblAlert.setText(node.getOutput());
             inputsEnable(true);            
             afterProcess();
+            this.history.add(input);
         } catch (Throwable e) {
             lblAlert.setText(e.getMessage());
             this.repaint();
@@ -243,17 +248,17 @@ public class MainWindow extends JFrame implements KeyListener, AdjustmentListene
                 SwingUtilities.invokeLater(() -> {
                     processInput(txtInput.getText());
                 });
-            }else if(nodesModel.size()>=1){
+            }else if(history.size()>=1){
                 switch (keyEvent.getKeyCode()) {
                     case KeyEvent.VK_UP:
-                        if (indCursor < nodesModel.size()) {
-                            txtInput.setText(nodesModel.get(nodesModel.size()-indCursor-1).getInput());
+                        if (indCursor < history.size()) {
+                            txtInput.setText(history.get(history.size()-indCursor-1));
                             indCursor++;
                         }
                         break;
                     case KeyEvent.VK_DOWN:
                         if (indCursor > 1) {
-                            txtInput.setText(nodesModel.get(nodesModel.size()-indCursor+1).getInput());
+                            txtInput.setText(history.get(history.size()-indCursor+1));
                             indCursor--;
                         }else{
                             txtInput.setText("");
