@@ -27,8 +27,10 @@ public class ViewNode extends JFrame{
     
     private final JPanel panelMain;
     
-    private JComponent    component;
-    private BufferedImage bufferedImage;
+    private JComponent    componentImageIn;
+    private JComponent    componentImageOut;
+    private BufferedImage imageIn;
+    private BufferedImage imageOut;
         
     public ViewNode(){
         this.panelMain = new JPanel();
@@ -38,12 +40,11 @@ public class ViewNode extends JFrame{
     }
     
     public void display(Node node){
-        this.bufferedImage = UtilLatex.latexToImage(node.getLatexOut(), 26);
-        
-        component = new JComponent() {
+        this.imageIn  = UtilLatex.latexToImage(node.getLatexIn(),  18);
+        componentImageIn = new JComponent() {
             @Override
             public void paint(Graphics g) {
-                g.drawImage(bufferedImage, 1, 1, null);
+                g.drawImage(imageIn, 1, 1, null);
             }
 
             @Override
@@ -53,13 +54,33 @@ public class ViewNode extends JFrame{
 
             @Override
             public Dimension getPreferredSize() {
-                return new Dimension(bufferedImage.getWidth(), bufferedImage.getHeight());
+                return new Dimension(imageIn.getWidth(), imageIn.getHeight());
             }
         };
         
-        this.setSize(this.bufferedImage.getWidth()+40, this.bufferedImage.getHeight()+100);
-        this.setPreferredSize(new Dimension(this.bufferedImage.getWidth()+40, this.bufferedImage.getHeight()+60));
-        panelMain.add(component, BorderLayout.CENTER);
+        this.imageOut = UtilLatex.latexToImage(node.getLatexOut(), 26);
+        componentImageOut = new JComponent() {
+            @Override
+            public void paint(Graphics g) {
+                g.drawImage(imageOut, 1, 1, null);
+            }
+
+            @Override
+            public void update(Graphics g) {
+                paint(g);
+            }
+
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(imageOut.getWidth(), imageOut.getHeight());
+            }
+        };
+        
+        JPanel latexPanel = new JPanel(new BorderLayout());
+        latexPanel.add(componentImageIn, BorderLayout.PAGE_START);
+        latexPanel.add(componentImageOut, BorderLayout.CENTER);
+
+        panelMain.add(latexPanel, BorderLayout.CENTER);
         JTextField input = new JTextField(node.getInput());
         input.setFont(MainWindow.FONT_INPUT);
         input.setEditable(false);
@@ -71,6 +92,9 @@ public class ViewNode extends JFrame{
         add(BorderLayout.PAGE_START, input);
         add(BorderLayout.CENTER, panelMain);
         add(BorderLayout.PAGE_END, output);
+        
+        this.setSize(this.imageOut.getWidth()+40, this.imageOut.getHeight()+this.imageIn.getHeight()+100);
+        this.setPreferredSize(new Dimension(this.imageOut.getWidth()+40, this.imageOut.getHeight()+this.imageIn.getHeight()+60));        
         display();
     }
     
@@ -79,6 +103,5 @@ public class ViewNode extends JFrame{
         super.setLocation(random.nextInt(300)+5, random.nextInt(300)+5);
         super.setVisible(true);
     }
-    
     
 }
