@@ -16,4 +16,8 @@ Example how to use:
 By:
    [www.diegocueva.com](http://www.diegocueva.com)
    
-
+   
+Licence: 
+GNU GENERAL PUBLIC LICENSE
+Version 3, 29 June 2007
+https://www.gnu.org/licenses/gpl-3.0.html
